@@ -3,7 +3,7 @@ output:
   html_document: default
   pdf_document: default
 ---
-# Profitabilitate {#intro}
+# Profitabilitate
 
 În această secțiune analizăm indicatorii de profitabilitate ai firmelor, în strânsă legătură cu studiul dinamicii acumulării de capital pentru a stabili în ce măsură acesta a avut loc pe parcursul acestor ani. Teoria economică mainstream se oprește de prea multe ori la studiul veniturilor fără a analiza dinamica acumulării capitaliste, întregul scop al regimului economic în care trăim. Venitul este doar un flux, pe când averea (activele, capitalul acumulat) sunt un stoc. Dacă fluxurile nu sunt reinvestite cu scopul creșterii stocului, capitalul nu e pus la treabă și mediul economic stagnează în subdezvoltare.
 
