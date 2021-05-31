@@ -1,0 +1,151 @@
+--- 
+title: "O analiză a firmelor din România"
+author: "Petre Buciu"
+date: "`r Sys.Date()`"
+output:
+  html_document:
+    df_print: paged
+  pdf_document: default
+documentclass: book
+bibliography: book.bib
+biblio-style: apalike
+link-citations: yes
+description: O analiză a firmelor din România
+site: bookdown::bookdown_site
+---
+
+# Imaginea de ansamblu
+
+În acest document vom explora câteva caracteristici importante ale bilanțurilor agenților economici (firme și PFA-uri) care activează în România, publicate de stat pe portalul de date deschise [data.gov.ro](https://data.gov.ro/dataset?q=situatii+financiare). Au fost adunate toate datele începând cu anul 2012 până în 2019 (ultimul pentru care sunt publicate datele). Au fost excluse firmele de asigurări, investiții financiare, bănci, ca atare analiza se va axa pe mediul economic (antreprenorial) nefinanciar. Vom releva câteva fapte-cheie despre mediul economic românesc puțin cunoscute cât și curiozități greu de explicat, unele ridicând întrebări asupra procesului de colectare a acestor date, iar altele asupra politicilor fiscale mai recente care par a fi văduvit bugetul de o porțiune din veniturile sale. Toate aceste elemente vor fi analizate separat. 
+
+```{r, include=FALSE}
+library(gt)
+library(tidyverse)
+library(arrow)
+library(hrbrthemes)
+theme_set(theme_ipsum_tw(plot_title_size=14, base_size=10))
+knitr::opts_chunk$set(warning=FALSE, message=FALSE, echo=FALSE, out.width='90%',
+                      fig.align='center', dpi=300)
+```
+
+```{r}
+x <- read_feather(here::here("/home/petre/R/firme/firme.feather"), 
+                  as_data_frame = F)
+```
+
+Setul de date asamblat din fișierele disponibile pe portal însumează `r nrow(x)` linii și `r ncol(x)` coloane, având în medie în jur de 700.000-800.000 de entități economice per an. Dacă acest număr nu este complet, el reprezintă oricum marea majoritate a firmelor existente în România, număr care după unele [surse](https://www.startupcafe.ro/afaceri/afaceri-romania-cel-mai-mic-numar-insolvente-instorie-record-entitati-active.htm) se află la un pic peste un milion, în [altele](https://www.economica.net/studiu-keysfin-primele-700-de-companii-care-activeaza-in-romania-au-produs-45prc-din-cifra-de-afaceri-a-tuturor-firmelor-nefinanciare-locale_190953.html) la în jur de 6-700.000. Probabil că numărul real este greu de știut cu certitudine. De asemenea, presa financiară abundă de calcule și estimări care mai de care mai contradictorii cu privire la multe chestiuni pe care le va analiza și articolul de față.
+
+Unele cifre înregistrate în aceste fișiere par a fi din start greșite - câteva firme care "angajează" câteva zeci de mii sau unele chiar milioane de salariați, pe când altele sunt doar problematice. În această categorie intră de exemplu firma `FVD GLOBAL HOUSE S.A.` al cărei capital se ridică la aproximativ un sfert din totalul capitalului firmelor din acest set - adică al firmelor din România. Această valoare pare fantastică și nu este clar ce active circulante deține această firmă de consultanță financiară, totuși valoarea pare a fi luată de bună inclusiv de siteurile comerciale de profil ca [listafirme.ro](https://www.listafirme.ro) sau [termene.ro](https://www.termene.ro). Aceste valori aberante deformează indicatorii calculați la nivelul întregii țări dacă acest lucru se face fără grijă.
+
+O altă particularitate a setului de date este numărul mare de agenți economici fără niciun salariat - fie pentru că în unele cazuri statul nu cunoaște numărul lor real, fie pentru că el e trecut chiar ca zero. Astfel, aproximativ 43 % din entitățile economice din acest set au zero salariați. Ele sunt PFA-uri, firme de familie, firme care angajează la negru, etc. Să vedem cum sunt distribuite firmele în categorii de mărime (după numărul de salariați) și din ce sectoare de activitate fac ele parte.  
+
+```{r}
+x %>% 
+  group_by(categorie, year) %>% 
+  summarise(numar = n()) %>% ungroup() %>% 
+  ggplot(aes(x=year, y=numar, group=categorie)) + 
+  geom_line(aes(colour=categorie)) + 
+  labs(title = "Număr firme pe categorii de mărime", x=NULL, y="Număr", caption="Figura I.1") +
+  scale_y_continuous(labels=scales::number_format(big.mark = ","))
+```
+
+Conform graficului din `figura I.1` avem un an interesant, 2015, în care aproximativ un sfert din firmele României au rămas fără angajatul sau puținii angajați pe care-i aveau, pentru a-i recupera anul viitor. În ce măsură este acest lucru un artefact de înregistrare a datelor sau un fenomen economic real, mărturisesc că nu pot răspunde. Un lucru e clar din imagine: excluzând anul 2015, în general 45-50 % din firmele României au 0 salariați, iar cele cu 1-3 salariați reprezintă și ele încă 30-35 %. Sub 20 % din firme au peste 3 salariați și, mai interesant, doar 1.3-1.4 % din firme au peste 50 de salariați. Niciodată acest procent nu depășește 1.5 % din totalul firmelor. S-ar părea că numărul de întreprinderi mijlocii și mari în România este de ordinul sutelor !
+
+Un alt lucru demn de investigat este distribuția firmelor pe sectoare de activitate.
+
+```{r}
+x %>% filter(year%in%c(2019), !grepl("angajator de personal casnic", categ)) %>% 
+  mutate(categ=substr(categ, 1, 32)) %>% 
+  group_by(year, categ) %>% summarise(numar = n()) %>% ungroup() %>% 
+  mutate(categ = fct_reorder(categ, numar)) %>% slice(1:20) %>% 
+  ggplot(aes(x=categ, y=numar)) + geom_col(fill="steelblue2") + coord_flip() +
+  labs(title = "Numărul firmelor pe sectoare de activitate", 
+       x=NULL, y=NULL, caption="Figura I.2") +
+  scale_y_continuous(labels=scales::number_format(big.mark=",")) +
+  theme(plot.title.position = "plot")
+```
+
+Comerțul este sectorul de activitate predominant de departe, cu peste 200.000 de firme, urmat de activități profesionale și construcții, apoi industrie prelucrătoare, transporturi și depozitare, HoReCa, etc. Pentru a desluși mai bine "misterul" firmelor fără niciun angajat, vom vizualiza distribuția numărului de firme pe sectoare și categorii de mărime sub forma tabelului din `figura I.3`.  
+
+
+```{r, out.width='100%'}
+x %>% filter(year%in%c(2019), !grepl("angajator de personal casnic", categ)) %>% group_by(categorie, categ) %>% summarise(numar = n()) %>% 
+  ungroup() %>% spread(categorie, numar) %>% mutate_all(~replace_na(., 0)) %>%
+  gt(rowname_col = "categ") %>% gt::tab_stubhead(label="Sector") %>%
+  gt::tab_spanner(label = "Număr salariați", columns=c(2:7)) %>%
+  gt::tab_options(column_labels.background.color = "#da3033", stub.font.weight ="italic",
+                  table.font.size = "12px") %>%
+  gt::cols_width(starts_with("categ") ~ "400px") 
+
+```
+
+Din acest tabel observăm că firmele fără salariați declarați există mai în toate sectoarele economiei, mai ales în cele în care ne-am aștepta cel mai mult dat fiind faptul că sunt populate cel mai adesea de PFA. Ce e de mirare e că și cele mai multe firme din industria prelucrătoare și chiar a construcțiilor fac parte din această categorie. E greu de crezut că se poate explica altfel decât prin evaziune fiscală și muncă la negru. Să vedem numărul firmelor care declară pierderi (în loc de profit) de-a lungul anilor.
+
+```{r, out.width='70%'}
+x %>% group_by(year, "index"=Profit_net>0) %>% 
+  summarise(numar = n()) %>% spread(index, numar) %>% 
+  mutate(ratio = 100*`FALSE`/(`FALSE`+`TRUE`)) %>% ungroup() %>% 
+  ggplot(aes(x=year, y=ratio)) + 
+  geom_col(fill="steelblue2") + 
+  labs(title = "Procentul firmelor pe pierdere", 
+       x=NULL, y=NULL, caption="Figura I.4") +
+  scale_y_continuous(labels=scales::percent_format(scale=1))
+
+```
+
+Astfel chiar și în vârful boomului economic din 2019, 43 % din firmele țării declarau pierdere !
+În mediul economic românesc există o binecunoscută concentrare a puterii economice într-o mână de firme foarte mari, majoritatea de proveniență străină. Trendul este relativ constant de-a lungul anilor, iar pentru anul 2019, primele 10 firme după cifra de afaceri (a zecea fiind chiar Dedeman) au obținut 8.44 % din totalul cifrei de afaceri la nivel național. Primele 100 de firme concentrează 26 % din total, iar primele 1000 de firme concentrează 48 % iar primele 10.000 74 %.
+Firma cu cea mai mare cifră de afaceri este Automobile-Dacia SA, urmată de OMV PETROM SA și Kaufland. Comerțul și industria prelucrătoare alcătuiesc împreună 700 din primele 1000 de firme ordonate după cifra de afaceri. Câteva din activitățile categorisite ca industrie prelucrătoare: fabricarea altor piese și accesorii pentru autovehicule, fabricarea de echipamente electrice și elecronice pentru autovehicule, fabricarea produselor din carne, producția de metale feroase sub forme primare și de feroaliaje, fabricarea altor echipamente electrice, fabricarea de echipamente electrocasnice, etc. Acesta este profilul economiei românești. 
+
+Cât de profitabile sunt aceste firme ? Vom analiza în detaliu separat aspectele legate de profitabilitate, dar pentru moment vom vizualiza distribuția profitului net pe categorii de salariați. Imaginea este sugestivă: deși firmele cele mai mari obțin cele mai mari profituri, chiar și câteva dintre cele mai mici, cu zero angajați, obțin profituri de peste 100 de milioane de lei, tipice pentru top 25 % din firmele cele mai mari. E o plajă foarte variată a profitabilității pentru firmele mici, dar relativ restrânsă pentru cele mari. Relație similară există și pentru cifra de afaceri. 
+
+```{r}
+x %>% filter(year==2019) %>% 
+  select(categorie, Profit_net) %>% collect() %>% 
+  ggplot(aes(x=categorie, y=Profit_net)) +
+  geom_violin(draw_quantiles = c(0.25,0.5,0.75), 
+              fill="steelblue1", alpha=0.7) + 
+  scale_y_continuous(trans="log10", 
+                     labels=scales::number_format(big.mark=",")) +
+  labs(title = "Profitul net după categorii de mărime", 
+       x=NULL, y="Profit net", caption="Figura I.5")
+
+```
+
+Instructivă ar fi o analiză a profitului net versus cel brut, pentru a observa dacă există grupuri distincte de firme. 
+
+```{r}
+x %>% 
+  select(Profit_brut, Profit_net, year) %>% 
+  filter(year==2019) %>% collect() %>% 
+  ggplot(aes(x=Profit_brut, y=Profit_net)) + 
+  geom_hex() + scale_x_log10() + scale_y_log10() + 
+  geom_abline(slope=1, intercept = 0, colour="red", size=1.5) +
+  labs(title = "Profit brut vs net", x="Profitul brut", y="Profitul net", 
+       caption="Figura I.6")
+
+```
+
+Linia roșie trasează relația de egalitate între cele două. Observând mai atent, sunt firme care declară profit net mai mare decât brut, mai exact 72 de firme. Mai observăm că firmele mici au cea mai mare variabilitate și abatere de la linie, ceea ce se traduce în cel mai mare procent de cheltuieli deductibile sau neprevăzute. Sau poate cea mai mare evaziune. Să vededm cum stau firmele la capital.
+
+```{r}
+x %>% select(year, capitaluri, categorie) %>% 
+  group_by(year, categorie, "index"=capitaluri>0) %>% 
+  summarise(numar=n()) %>% ungroup() %>% 
+  spread(index, numar) %>% rename(negativ = `FALSE`) %>% 
+  rename(positiv=`TRUE`) %>% mutate(ratio = 100*negativ/(negativ+positiv)) %>% 
+  ggplot(aes(x=year, y=ratio, group=categorie)) + 
+  geom_line(aes(colour=categorie)) +
+  scale_y_continuous(labels=scales::percent_format(scale=1)) +
+  labs(title = "Procentul firmelor cu capital negativ", 
+       y=NULL, x=NULL, caption="Figura I.7")
+
+```
+
+Observăm că peste 50 % din firmele cu zero salariați au capital negativ, deși numărul a fost în scădere de la Marea Criză încoace. Cu cât firma e mai mare, cu atât procentul firmelor cu capital negativ e mai mic. Ar fi interesant de investigat dacă firmele cu zero salariați cu capital negativ sunt aceleași cu cele care declară pierderi. Răspunsul este complex: 22.3 % din firmele cu capital pozitiv declară pierderi oricum, versus 82 % firme cu capital negativ. Se pare că variabila este un important predictor al profitabilității firmei.
+
+
+
+
+
+

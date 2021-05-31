@@ -1,0 +1,57 @@
+
+# Diferite metode de impozitare
+
+În această secțiune vom analiza care dintre cele două metode de impozitare - pe cifra de afaceri sau pe profit - este soluția care maximizează veniturile statului. În momentul actual, microîntreprinderile (cifra de afaceri sub 1 milion de euro) sunt impozitate cu 3 % pe cifra de afaceri dacă nu au angajați și 1 % dacă au. Doar pentru firmele ce trec de acest prag impozitul este de 16 % pe profit. Pragul de 1 milion de euro a fost ridicat încă din 2015 în mod treptat astfel că și-a pierdut scopul de a fi un prag care, chipurile, ar ajuta firmele "mici" să plătească mai puțin din moment ce doar 4 % din firme depășesc acest prag. Departe de a fi o măsură care susține "micii antreprenori", a devenit sub auspiciile teoreticienilor social-democrați valahi care trec drept oameni de stânga, și nu a "neoliberalilor", o măsură de relaxare fiscală generalizată. Să începem prin a calcula care este impactul teoretic al acestor măsuri, în anumite limite, întrucât firmele mici pot opta și pentru impozitul pe profit dacă îndeplinesc anumite condiții (angajați și 45.000 euro capital social) dacă ele consideră că este mai avantajos așa. Vom asuma că fiecare fiecare firmă plătește așa cum este mai avantajos pentru ea (impozitul cel mai mic pe care-l poate plăti). Apoi vom calcula cât ar putea câștiga statul în plus revenind la cota unică de 16 % pe profit și care sunt firmele avantajate sau dezavantajate de fiecare schemă.
+
+```{r, include=FALSE}
+library(gt)
+library(tidyverse)
+library(arrow)
+library(hrbrthemes)
+theme_set(theme_ipsum_tw(plot_title_size=14, base_size=10))
+knitr::opts_chunk$set(warning=FALSE, message=FALSE, echo=FALSE, out.width='90%',
+                      fig.align='center', dpi=300)
+```
+
+```{r}
+x <- read_feather(here::here("/home/petre/R/firme/firme.feather"), 
+                  as_data_frame = F)
+```
+
+```{r}
+y <- x %>% filter(year==2019) %>% 
+    select(CA, Profit_net, Salariati, CSV, categ, nume) %>% 
+    mutate(index = if_else(CA>4920000, 1, 0)) %>% 
+    mutate(can = if_else(CSV>45000 & Salariati>1, 1, 0)) %>% 
+    mutate(impozit = case_when(index==0 & can==0 & Salariati == 0 ~ 0.03*CA,
+                            index==0 & can==0 & Salariati > 0 ~ 0.01*CA,
+                            index==0 & can==1 ~ if_else(0.01*CA < 0.16*Profit_net,
+                                                        0.01*CA,0.16*Profit_net),
+                            index==1 ~ 0.16*Profit_net), prezis = 0.16*Profit_net)
+
+y %>% ggplot(aes(x=prezis, y=impozit)) + 
+  geom_hex() + scale_x_log10() + 
+  scale_y_log10() + 
+  geom_abline(slope=1, intercept = 0, colour="red", size=1.5) +
+  labs(title = "Cât ar trebui să plătească vs cât plătesc", 
+       x="16 % cotă unică", y="În prezent", caption="Figura III.1")
+```
+
+Observăm în graficul din `figura III.1` că nu există o variantă universal favorabilă sau nefavorabilă - nu toate firmele mici au posibilitatea să opteze pentru impozitul pe profit și asta se vede. Altminteri nicio firmă nu s-ar putea situa deasupra liniei roșii și toate firmele ar plăti în mod umanim mai mult sub regimul cotei unice. Cu toate astea există totuși diferență în agregat - cea care contează pentru bugetul statului. Astfel avem `r sum(pull(y, prezis))/1000000000` miliarde lei impozit adunat în regimul cotei unice de 16 % și `r sum(pull(y, impozit))/1000000000` miliarde adunate în prezent (în anul 2019). Diferența este semnificativă, statul ar putea obține cu 34 % mai mult impozit pe profit decât în prezent, echivalentul diferenței fiind de aproximativ 0.5 % din PIB. Cum ar afecta această schimbare sectoarele de activitate ? 
+
+```{r}
+y %>% mutate(categ=substr(categ, 1, 32)) %>% group_by(categ) %>% 
+  summarise(delta = sum(prezis)-sum(impozit)) %>% 
+  arrange(desc(delta)) %>% mutate(delta = delta/1000000) %>%
+  slice(1:10) %>%
+  mutate(categ = fct_reorder(categ, delta)) %>%
+  ggplot(aes(x=categ, y=delta)) + 
+  geom_col(fill="steelblue1") + coord_flip() +
+  labs(title = "Care sectoare ar plăti surplusul ?", 
+       x=NULL, y="Milione lei", caption="Figura III.2")
+```
+
+Aparent, cel mai mare impact ar fi asupra PFA-urilor, construcțiilor, comerțului și tranzacțiilor imobiliare. Dar acest lucru doar datorită numărului lor mare. Altminteri, firmele care vor plăti în medie - nu în sumă, cel mai mult sunt cele de intermedieri financiare și asigurări, tranzacții imobiliare și producția și furnizarea de energie electrică. Ele vor plăti în plus cele mai mari sume la nivel de firmă, nu de sector.
+
+
+

@@ -1,0 +1,733 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>O analiză a firmelor din România</title>
+  <meta name="description" content="O analiză a firmelor din România" />
+  <meta name="generator" content="bookdown 0.21 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="O analiză a firmelor din România" />
+  <meta property="og:type" content="book" />
+  
+  
+  <meta property="og:description" content="O analiză a firmelor din România" />
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="O analiză a firmelor din România" />
+  
+  <meta name="twitter:description" content="O analiză a firmelor din România" />
+  
+
+<meta name="author" content="Petre Buciu" />
+
+
+<meta name="date" content="2021-05-31" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+
+<link rel="next" href="intro.html"/>
+<script src="libs/header-attrs-2.8/header-attrs.js"></script>
+<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">O analiză a firmelor din România</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Imaginea de ansamblu</a></li>
+<li class="chapter" data-level="2" data-path="intro.html"><a href="intro.html"><i class="fa fa-check"></i><b>2</b> Profitabilitate</a></li>
+<li class="chapter" data-level="3" data-path="diferite-metode-de-impozitare.html"><a href="diferite-metode-de-impozitare.html"><i class="fa fa-check"></i><b>3</b> Diferite metode de impozitare</a></li>
+<li class="chapter" data-level="4" data-path="concluzii.html"><a href="concluzii.html"><i class="fa fa-check"></i><b>4</b> Concluzii</a></li>
+<li class="divider"></li>
+<li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">O analiză a firmelor din România</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="header">
+<h1 class="title">O analiză a firmelor din România</h1>
+<p class="author"><em>Petre Buciu</em></p>
+<p class="date"><em>2021-05-31</em></p>
+</div>
+<div id="imaginea-de-ansamblu" class="section level1" number="1">
+<h1><span class="header-section-number">Capitol 1</span> Imaginea de ansamblu</h1>
+<p>În acest document vom explora câteva caracteristici importante ale bilanțurilor agenților economici (firme și PFA-uri) care activează în România, publicate de stat pe portalul de date deschise <a href="https://data.gov.ro/dataset?q=situatii+financiare">data.gov.ro</a>. Au fost adunate toate datele începând cu anul 2012 până în 2019 (ultimul pentru care sunt publicate datele). Au fost excluse firmele de asigurări, investiții financiare, bănci, ca atare analiza se va axa pe mediul economic (antreprenorial) nefinanciar. Vom releva câteva fapte-cheie despre mediul economic românesc puțin cunoscute cât și curiozități greu de explicat, unele ridicând întrebări asupra procesului de colectare a acestor date, iar altele asupra politicilor fiscale mai recente care par a fi văduvit bugetul de o porțiune din veniturile sale. Toate aceste elemente vor fi analizate separat.</p>
+<p>Setul de date asamblat din fișierele disponibile pe portal însumează 5569780 linii și 30 coloane, având în medie în jur de 700.000-800.000 de entități economice per an. Dacă acest număr nu este complet, el reprezintă oricum marea majoritate a firmelor existente în România, număr care după unele <a href="https://www.startupcafe.ro/afaceri/afaceri-romania-cel-mai-mic-numar-insolvente-instorie-record-entitati-active.htm">surse</a> se află la un pic peste un milion, în <a href="https://www.economica.net/studiu-keysfin-primele-700-de-companii-care-activeaza-in-romania-au-produs-45prc-din-cifra-de-afaceri-a-tuturor-firmelor-nefinanciare-locale_190953.html">altele</a> la în jur de 6-700.000. Probabil că numărul real este greu de știut cu certitudine. De asemenea, presa financiară abundă de calcule și estimări care mai de care mai contradictorii cu privire la multe chestiuni pe care le va analiza și articolul de față.</p>
+<p>Unele cifre înregistrate în aceste fișiere par a fi din start greșite - câteva firme care “angajează” câteva zeci de mii sau unele chiar milioane de salariați, pe când altele sunt doar problematice. În această categorie intră de exemplu firma <code>FVD GLOBAL HOUSE S.A.</code> al cărei capital se ridică la aproximativ un sfert din totalul capitalului firmelor din acest set - adică al firmelor din România. Această valoare pare fantastică și nu este clar ce active circulante deține această firmă de consultanță financiară, totuși valoarea pare a fi luată de bună inclusiv de siteurile comerciale de profil ca <a href="https://www.listafirme.ro">listafirme.ro</a> sau <a href="https://www.termene.ro">termene.ro</a>. Aceste valori aberante deformează indicatorii calculați la nivelul întregii țări dacă acest lucru se face fără grijă.</p>
+<p>O altă particularitate a setului de date este numărul mare de agenți economici fără niciun salariat - fie pentru că în unele cazuri statul nu cunoaște numărul lor real, fie pentru că el e trecut chiar ca zero. Astfel, aproximativ 43 % din entitățile economice din acest set au zero salariați. Ele sunt PFA-uri, firme de familie, firme care angajează la negru, etc. Să vedem cum sunt distribuite firmele în categorii de mărime (după numărul de salariați) și din ce sectoare de activitate fac ele parte.</p>
+<p><img src="carte_files/figure-html/unnamed-chunk-15-1.png" width="90%" style="display: block; margin: auto;" /></p>
+<p>Conform graficului din <code>figura I.1</code> avem un an interesant, 2015, în care aproximativ un sfert din firmele României au rămas fără angajatul sau puținii angajați pe care-i aveau, pentru a-i recupera anul viitor. În ce măsură este acest lucru un artefact de înregistrare a datelor sau un fenomen economic real, mărturisesc că nu pot răspunde. Un lucru e clar din imagine: excluzând anul 2015, în general 45-50 % din firmele României au 0 salariați, iar cele cu 1-3 salariați reprezintă și ele încă 30-35 %. Sub 20 % din firme au peste 3 salariați și, mai interesant, doar 1.3-1.4 % din firme au peste 50 de salariați. Niciodată acest procent nu depășește 1.5 % din totalul firmelor. S-ar părea că numărul de întreprinderi mijlocii și mari în România este de ordinul sutelor !</p>
+<p>Un alt lucru demn de investigat este distribuția firmelor pe sectoare de activitate.</p>
+<p><img src="carte_files/figure-html/unnamed-chunk-16-1.png" width="90%" style="display: block; margin: auto;" /></p>
+<p>Comerțul este sectorul de activitate predominant de departe, cu peste 200.000 de firme, urmat de activități profesionale și construcții, apoi industrie prelucrătoare, transporturi și depozitare, HoReCa, etc. Pentru a desluși mai bine “misterul” firmelor fără niciun angajat, vom vizualiza distribuția numărului de firme pe sectoare și categorii de mărime sub forma tabelului din <code>figura I.3</code>.</p>
+<style>html {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Helvetica Neue', 'Fira Sans', 'Droid Sans', Arial, sans-serif;
+}
+
+#pudlnjjcqa .gt_table {
+  display: table;
+  border-collapse: collapse;
+  margin-left: auto;
+  margin-right: auto;
+  color: #333333;
+  font-size: 12px;
+  font-weight: normal;
+  font-style: normal;
+  background-color: #FFFFFF;
+  width: auto;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #A8A8A8;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #A8A8A8;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+}
+
+#pudlnjjcqa .gt_heading {
+  background-color: #FFFFFF;
+  text-align: center;
+  border-bottom-color: #FFFFFF;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#pudlnjjcqa .gt_title {
+  color: #333333;
+  font-size: 125%;
+  font-weight: initial;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  border-bottom-color: #FFFFFF;
+  border-bottom-width: 0;
+}
+
+#pudlnjjcqa .gt_subtitle {
+  color: #333333;
+  font-size: 85%;
+  font-weight: initial;
+  padding-top: 0;
+  padding-bottom: 4px;
+  border-top-color: #FFFFFF;
+  border-top-width: 0;
+}
+
+#pudlnjjcqa .gt_bottom_border {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#pudlnjjcqa .gt_col_headings {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#pudlnjjcqa .gt_col_heading {
+  color: #FFFFFF;
+  background-color: #da3033;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 6px;
+  padding-left: 5px;
+  padding-right: 5px;
+  overflow-x: hidden;
+}
+
+#pudlnjjcqa .gt_column_spanner_outer {
+  color: #FFFFFF;
+  background-color: #da3033;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  padding-top: 0;
+  padding-bottom: 0;
+  padding-left: 4px;
+  padding-right: 4px;
+}
+
+#pudlnjjcqa .gt_column_spanner_outer:first-child {
+  padding-left: 0;
+}
+
+#pudlnjjcqa .gt_column_spanner_outer:last-child {
+  padding-right: 0;
+}
+
+#pudlnjjcqa .gt_column_spanner {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 6px;
+  overflow-x: hidden;
+  display: inline-block;
+  width: 100%;
+}
+
+#pudlnjjcqa .gt_group_heading {
+  padding: 8px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+}
+
+#pudlnjjcqa .gt_empty_group_heading {
+  padding: 0.5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: middle;
+}
+
+#pudlnjjcqa .gt_from_md > :first-child {
+  margin-top: 0;
+}
+
+#pudlnjjcqa .gt_from_md > :last-child {
+  margin-bottom: 0;
+}
+
+#pudlnjjcqa .gt_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  margin: 10px;
+  border-top-style: solid;
+  border-top-width: 1px;
+  border-top-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  overflow-x: hidden;
+}
+
+#pudlnjjcqa .gt_stub {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: italic;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 12px;
+}
+
+#pudlnjjcqa .gt_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#pudlnjjcqa .gt_first_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+}
+
+#pudlnjjcqa .gt_grand_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#pudlnjjcqa .gt_first_grand_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-style: double;
+  border-top-width: 6px;
+  border-top-color: #D3D3D3;
+}
+
+#pudlnjjcqa .gt_striped {
+  background-color: rgba(128, 128, 128, 0.05);
+}
+
+#pudlnjjcqa .gt_table_body {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#pudlnjjcqa .gt_footnotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#pudlnjjcqa .gt_footnote {
+  margin: 0px;
+  font-size: 90%;
+  padding: 4px;
+}
+
+#pudlnjjcqa .gt_sourcenotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#pudlnjjcqa .gt_sourcenote {
+  font-size: 90%;
+  padding: 4px;
+}
+
+#pudlnjjcqa .gt_left {
+  text-align: left;
+}
+
+#pudlnjjcqa .gt_center {
+  text-align: center;
+}
+
+#pudlnjjcqa .gt_right {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+#pudlnjjcqa .gt_font_normal {
+  font-weight: normal;
+}
+
+#pudlnjjcqa .gt_font_bold {
+  font-weight: bold;
+}
+
+#pudlnjjcqa .gt_font_italic {
+  font-style: italic;
+}
+
+#pudlnjjcqa .gt_super {
+  font-size: 65%;
+}
+
+#pudlnjjcqa .gt_footnote_marks {
+  font-style: italic;
+  font-size: 65%;
+}
+</style>
+<div id="pudlnjjcqa" style="overflow-x:auto;overflow-y:auto;width:auto;height:auto;"><table class="gt_table" style="table-layout: fixed;">
+  <colgroup>
+    <col style="width:400px;"/>
+    <col/>
+    <col/>
+    <col/>
+    <col/>
+    <col/>
+    <col/>
+  </colgroup>
+  
+  <thead class="gt_col_headings">
+    <tr>
+      <th class="gt_col_heading gt_columns_bottom_border gt_left" rowspan="2" colspan="1">Sector</th>
+      <th class="gt_center gt_columns_top_border gt_column_spanner_outer" rowspan="1" colspan="6">
+        <span class="gt_column_spanner">Număr salariați</span>
+      </th>
+    </tr>
+    <tr>
+      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1">0</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1">1-3</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1">3-10</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1">10-50</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1">50-1000</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1">peste 1000</th>
+    </tr>
+  </thead>
+  <tbody class="gt_table_body">
+    <tr>
+      <td class="gt_row gt_left gt_stub">Activități ale organizațiilor și organismelor extrateritoriale</td>
+      <td class="gt_row gt_right">18</td>
+      <td class="gt_row gt_right">8</td>
+      <td class="gt_row gt_right">4</td>
+      <td class="gt_row gt_right">10</td>
+      <td class="gt_row gt_right">2</td>
+      <td class="gt_row gt_right">0</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left gt_stub">Activități de servicii administrative și activități de servicii suport</td>
+      <td class="gt_row gt_right">13907</td>
+      <td class="gt_row gt_right">11126</td>
+      <td class="gt_row gt_right">3075</td>
+      <td class="gt_row gt_right">2185</td>
+      <td class="gt_row gt_right">807</td>
+      <td class="gt_row gt_right">34</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left gt_stub">Activitați de spectacole, culturale și recreative</td>
+      <td class="gt_row gt_right">8055</td>
+      <td class="gt_row gt_right">5179</td>
+      <td class="gt_row gt_right">872</td>
+      <td class="gt_row gt_right">370</td>
+      <td class="gt_row gt_right">127</td>
+      <td class="gt_row gt_right">6</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left gt_stub">Activități profesionale, științifice și tehnice</td>
+      <td class="gt_row gt_right">41488</td>
+      <td class="gt_row gt_right">35071</td>
+      <td class="gt_row gt_right">6204</td>
+      <td class="gt_row gt_right">1920</td>
+      <td class="gt_row gt_right">351</td>
+      <td class="gt_row gt_right">6</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left gt_stub">Administrație publică și apărare; asigurări sociale din sistemul public</td>
+      <td class="gt_row gt_right">71</td>
+      <td class="gt_row gt_right">46</td>
+      <td class="gt_row gt_right">19</td>
+      <td class="gt_row gt_right">26</td>
+      <td class="gt_row gt_right">20</td>
+      <td class="gt_row gt_right">1</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left gt_stub">Agricultură, silvicultură și pescuit</td>
+      <td class="gt_row gt_right">10495</td>
+      <td class="gt_row gt_right">8573</td>
+      <td class="gt_row gt_right">4248</td>
+      <td class="gt_row gt_right">2073</td>
+      <td class="gt_row gt_right">244</td>
+      <td class="gt_row gt_right">3</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left gt_stub">Alte activități de servicii</td>
+      <td class="gt_row gt_right">9204</td>
+      <td class="gt_row gt_right">8498</td>
+      <td class="gt_row gt_right">2507</td>
+      <td class="gt_row gt_right">473</td>
+      <td class="gt_row gt_right">62</td>
+      <td class="gt_row gt_right">0</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left gt_stub">Comerț cu ridicata și cu amănuntul; repararea autovehiculelor și motocicletelor</td>
+      <td class="gt_row gt_right">93338</td>
+      <td class="gt_row gt_right">82547</td>
+      <td class="gt_row gt_right">25601</td>
+      <td class="gt_row gt_right">10289</td>
+      <td class="gt_row gt_right">1548</td>
+      <td class="gt_row gt_right">37</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left gt_stub">Construcții</td>
+      <td class="gt_row gt_right">30465</td>
+      <td class="gt_row gt_right">27291</td>
+      <td class="gt_row gt_right">12079</td>
+      <td class="gt_row gt_right">6243</td>
+      <td class="gt_row gt_right">974</td>
+      <td class="gt_row gt_right">5</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left gt_stub">Distribuția apei; salubritate, gestionarea deșeurilor, activități de decontaminare</td>
+      <td class="gt_row gt_right">1261</td>
+      <td class="gt_row gt_right">1188</td>
+      <td class="gt_row gt_right">623</td>
+      <td class="gt_row gt_right">447</td>
+      <td class="gt_row gt_right">202</td>
+      <td class="gt_row gt_right">10</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left gt_stub">Hoteluri și restaurante</td>
+      <td class="gt_row gt_right">14873</td>
+      <td class="gt_row gt_right">11936</td>
+      <td class="gt_row gt_right">5372</td>
+      <td class="gt_row gt_right">3426</td>
+      <td class="gt_row gt_right">392</td>
+      <td class="gt_row gt_right">2</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left gt_stub">Industria extractivă</td>
+      <td class="gt_row gt_right">557</td>
+      <td class="gt_row gt_right">364</td>
+      <td class="gt_row gt_right">200</td>
+      <td class="gt_row gt_right">241</td>
+      <td class="gt_row gt_right">66</td>
+      <td class="gt_row gt_right">4</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left gt_stub">Industria prelucrătoare</td>
+      <td class="gt_row gt_right">27373</td>
+      <td class="gt_row gt_right">22366</td>
+      <td class="gt_row gt_right">10166</td>
+      <td class="gt_row gt_right">8074</td>
+      <td class="gt_row gt_right">3127</td>
+      <td class="gt_row gt_right">120</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left gt_stub">Informații și comunicații</td>
+      <td class="gt_row gt_right">17142</td>
+      <td class="gt_row gt_right">12069</td>
+      <td class="gt_row gt_right">2273</td>
+      <td class="gt_row gt_right">1332</td>
+      <td class="gt_row gt_right">402</td>
+      <td class="gt_row gt_right">28</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left gt_stub">Intermedieri financiare și asigurări</td>
+      <td class="gt_row gt_right">5401</td>
+      <td class="gt_row gt_right">3615</td>
+      <td class="gt_row gt_right">638</td>
+      <td class="gt_row gt_right">276</td>
+      <td class="gt_row gt_right">48</td>
+      <td class="gt_row gt_right">0</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left gt_stub">Învățământ</td>
+      <td class="gt_row gt_right">4208</td>
+      <td class="gt_row gt_right">3166</td>
+      <td class="gt_row gt_right">1073</td>
+      <td class="gt_row gt_right">289</td>
+      <td class="gt_row gt_right">10</td>
+      <td class="gt_row gt_right">0</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left gt_stub">Producția și furnizarea de energie electrică și termică, gaze, apă caldă și aer condiționat</td>
+      <td class="gt_row gt_right">1338</td>
+      <td class="gt_row gt_right">455</td>
+      <td class="gt_row gt_right">125</td>
+      <td class="gt_row gt_right">87</td>
+      <td class="gt_row gt_right">64</td>
+      <td class="gt_row gt_right">17</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left gt_stub">Sănătate și asistență socială</td>
+      <td class="gt_row gt_right">8283</td>
+      <td class="gt_row gt_right">9461</td>
+      <td class="gt_row gt_right">2622</td>
+      <td class="gt_row gt_right">941</td>
+      <td class="gt_row gt_right">137</td>
+      <td class="gt_row gt_right">5</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left gt_stub">Transport și depozitare</td>
+      <td class="gt_row gt_right">21725</td>
+      <td class="gt_row gt_right">29463</td>
+      <td class="gt_row gt_right">7774</td>
+      <td class="gt_row gt_right">3317</td>
+      <td class="gt_row gt_right">669</td>
+      <td class="gt_row gt_right">19</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left gt_stub">Tranzacții imobiliare</td>
+      <td class="gt_row gt_right">13732</td>
+      <td class="gt_row gt_right">8525</td>
+      <td class="gt_row gt_right">1438</td>
+      <td class="gt_row gt_right">515</td>
+      <td class="gt_row gt_right">61</td>
+      <td class="gt_row gt_right">1</td>
+    </tr>
+  </tbody>
+  
+  
+</table></div>
+<p>Din acest tabel observăm că firmele fără salariați declarați există mai în toate sectoarele economiei, mai ales în cele în care ne-am aștepta cel mai mult dat fiind faptul că sunt populate cel mai adesea de PFA. Ce e de mirare e că și cele mai multe firme din industria prelucrătoare și chiar a construcțiilor fac parte din această categorie. E greu de crezut că se poate explica altfel decât prin evaziune fiscală și muncă la negru. Să vedem numărul firmelor care declară pierderi (în loc de profit) de-a lungul anilor.</p>
+<p><img src="carte_files/figure-html/unnamed-chunk-18-1.png" width="70%" style="display: block; margin: auto;" /></p>
+<p>Astfel chiar și în vârful boomului economic din 2019, 43 % din firmele țării declarau pierdere !
+În mediul economic românesc există o binecunoscută concentrare a puterii economice într-o mână de firme foarte mari, majoritatea de proveniență străină. Trendul este relativ constant de-a lungul anilor, iar pentru anul 2019, primele 10 firme după cifra de afaceri (a zecea fiind chiar Dedeman) au obținut 8.44 % din totalul cifrei de afaceri la nivel național. Primele 100 de firme concentrează 26 % din total, iar primele 1000 de firme concentrează 48 % iar primele 10.000 74 %.
+Firma cu cea mai mare cifră de afaceri este Automobile-Dacia SA, urmată de OMV PETROM SA și Kaufland. Comerțul și industria prelucrătoare alcătuiesc împreună 700 din primele 1000 de firme ordonate după cifra de afaceri. Câteva din activitățile categorisite ca industrie prelucrătoare: fabricarea altor piese și accesorii pentru autovehicule, fabricarea de echipamente electrice și elecronice pentru autovehicule, fabricarea produselor din carne, producția de metale feroase sub forme primare și de feroaliaje, fabricarea altor echipamente electrice, fabricarea de echipamente electrocasnice, etc. Acesta este profilul economiei românești.</p>
+<p>Cât de profitabile sunt aceste firme ? Vom analiza în detaliu separat aspectele legate de profitabilitate, dar pentru moment vom vizualiza distribuția profitului net pe categorii de salariați. Imaginea este sugestivă: deși firmele cele mai mari obțin cele mai mari profituri, chiar și câteva dintre cele mai mici, cu zero angajați, obțin profituri de peste 100 de milioane de lei, tipice pentru top 25 % din firmele cele mai mari. E o plajă foarte variată a profitabilității pentru firmele mici, dar relativ restrânsă pentru cele mari. Relație similară există și pentru cifra de afaceri.</p>
+<p><img src="carte_files/figure-html/unnamed-chunk-19-1.png" width="90%" style="display: block; margin: auto;" /></p>
+<p>Instructivă ar fi o analiză a profitului net versus cel brut, pentru a observa dacă există grupuri distincte de firme.</p>
+<p><img src="carte_files/figure-html/unnamed-chunk-20-1.png" width="90%" style="display: block; margin: auto;" /></p>
+<p>Linia roșie trasează relația de egalitate între cele două. Observând mai atent, sunt firme care declară profit net mai mare decât brut, mai exact 72 de firme. Mai observăm că firmele mici au cea mai mare variabilitate și abatere de la linie, ceea ce se traduce în cel mai mare procent de cheltuieli deductibile sau neprevăzute. Sau poate cea mai mare evaziune. Să vededm cum stau firmele la capital.</p>
+<p><img src="carte_files/figure-html/unnamed-chunk-21-1.png" width="90%" style="display: block; margin: auto;" /></p>
+<p>Observăm că peste 50 % din firmele cu zero salariați au capital negativ, deși numărul a fost în scădere de la Marea Criză încoace. Cu cât firma e mai mare, cu atât procentul firmelor cu capital negativ e mai mic. Ar fi interesant de investigat dacă firmele cu zero salariați cu capital negativ sunt aceleași cu cele care declară pierderi. Răspunsul este complex: 22.3 % din firmele cu capital pozitiv declară pierderi oricum, versus 82 % firme cu capital negativ. Se pare că variabila este un important predictor al profitabilității firmei.</p>
+
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+
+<a href="intro.html" class="navigation navigation-next navigation-unique" aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": null,
+"text": null
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": ["carte.pdf", "carte.epub"],
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+</body>
+
+</html>

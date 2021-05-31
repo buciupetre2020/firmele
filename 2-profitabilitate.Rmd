@@ -1,0 +1,160 @@
+---
+output:
+  html_document: default
+  pdf_document: default
+---
+# Profitabilitate {#intro}
+
+În această secțiune analizăm indicatorii de profitabilitate ai firmelor, în strânsă legătură cu studiul dinamicii acumulării de capital pentru a stabili în ce măsură acesta a avut loc pe parcursul acestor ani. Teoria economică mainstream se oprește de prea multe ori la studiul veniturilor fără a analiza dinamica acumulării capitaliste, întregul scop al regimului economic în care trăim. Venitul este doar un flux, pe când averea (activele, capitalul acumulat) sunt un stoc. Dacă fluxurile nu sunt reinvestite cu scopul creșterii stocului, capitalul nu e pus la treabă și mediul economic stagnează în subdezvoltare.
+
+```{r, include=FALSE}
+library(gt)
+library(tidyverse)
+library(arrow)
+library(hrbrthemes)
+theme_set(theme_ipsum_tw(plot_title_size=14, base_size=10))
+knitr::opts_chunk$set(warning=FALSE, message=FALSE, echo=FALSE, out.width='90%',
+                      fig.align='center', dpi=300)
+```
+
+```{r}
+x <- read_feather(here::here("/home/petre/R/firme/firme.feather"), 
+                  as_data_frame = F)
+```
+
+Începem prin a defini câțiva indicatori de profitabilitate: ne vom opri asupra a doi dintre ei: profitabilitatea ca procent din activele totale (aici ROA de la "return on assets") - cel mai apropiat de conceptul marxist de profitabilitate și profitabilitatea ca procent din cifra de afaceri (ROS - "return on sales"). Capitalul este definit ca diferența dintre activele totale (la rândul lor imobilizate sau circulante) și datorii. Cu aceste lucruri în minte, vom sumariza situația pentru anul 2019 în următorul tabel.
+
+```{r, echo=FALSE}
+#sumarizare
+x %>% filter(year==2019) %>%
+  group_by(categorie) %>% 
+  summarise(profit = sum(Profit_net, na.rm=TRUE), 
+            firme=n(), 
+            salariati = sum(Salariati, na.rm=TRUE),
+            ROA = 100*sum(Profit_net,na.rm=TRUE)/sum(AC+AI,na.rm=TRUE),
+            ROS = 100*sum(Profit_net, na.rm=TRUE)/sum(CA, na.rm=TRUE)) %>% 
+  ungroup() %>% arrange(desc(profit)) %>% 
+  mutate(P_profit = 100*profit/sum(profit), 
+         P_firme = 100*firme/sum(firme),
+         P_salariati=100*salariati/sum(salariati)) %>% arrange((categorie)) %>% 
+  gt::gt(rowname_col = "categorie") %>% 
+  gt::fmt_number(columns=2:4, suffixing = T, decimals = 1) %>% 
+  gt::fmt_percent(columns=5:9,decimals = 1, scale_values = F) %>% 
+  gt::tab_stubhead("categorie") %>%
+  gt::tab_spanner(label="Sumă", columns=2:4) %>%
+  gt::tab_spanner(label="Procente din total", columns=7:9) %>%
+  gt::tab_spanner(label="Profitabilitate", columns=5:6) %>%
+  gt::summary_rows(fns=list("Total"= "sum"), columns = c(2:4,7:9),
+                   formatter = gt::fmt_number, suffixing=T, decimals=1) %>%
+  tab_options(grand_summary_row.background.color = "#ab3032",
+              column_labels.background.color = "#0F6E9D",
+              table.border.bottom.color = "#000", 
+              table.border.left.color = "#000", table.border.right.color = "#000",
+              table.background.color = "#C5E8F9", table.font.size = "12px",
+              table.additional_css = "td{border: 1px solid black;} 
+              table{box-shadow: 5px 5px 10px #000; margin-bottom:10px}") %>%
+  gt::cols_width(everything()~"85px") %>%
+  gt::tab_header(title = "Profitul societăților comerciale din România (2019)", 
+                 subtitle = "Tabelul II.2") 
+```
+
+Observăm în primul rând că setul nostru de date cuprinde 743.000 de firme care angajează 4.1 milioane de salariați care au obținut 134 miliarde de lei în profit. Pentru [anul 2019](https://www.zf.ro/zf-24/incasarile-bugetul-stat-impozit-profit-s-au-dublat-ultimii-10-ani-procente-pib-au-scazut-alexandra-smedoiu-deloitte-creasca-incasarile-impozitul-profit-pondere-pib-avem-nevoie-producem-valoare-18813923) s-au vărsat în conturile statului 17.7 miliarde de lei în impozit pe profit, ceea ce înseamnă 13.2 % din total, aproape de 16 % rata nominală a impozitării. Impreună cu bugetarii, cifra pentru numărul de salariați se ridică aproximativ la valoarea pe care o cunoaștem pentru numărul de angajați din economie. Cu aceste indicii putem concluziona că setul nostru de date este relativ complet.
+
+Al doilea lucru care sare în ochi este profitabilitatea foarte crescută cu marje de profit foarte mari - mai ales cea raportată la vânzări - a firmelor mici. Dar este un procent mare dintr-o valoare mică, întrucât 30 % din firmele românești din 2019 obțin mai puțin de 4438 lei profit pe an ! Mediana este 20373 de lei pe an, ceea ce înseamnă un pic mai mult de salariul minim lunar în profit. Asta este firma tipică din economia românească ! Doar 20 % din firme obțin mai mult de 10.000 lei lunar în profit. Să vedem cum variază profitabilitatea în timp la nivelul întregii economii.
+
+
+```{r}
+x %>% select(year, CA, Profit_net, AI,AC) %>% 
+  group_by(year) %>% 
+  summarise(ROA = 100*sum(Profit_net)/sum(AI + AC), 
+            ROS = 100*sum(Profit_net)/sum(CA)) %>% 
+  gather(2:3, key="Indicator", value="Valoare") %>% 
+  ggplot(aes(x=year, y=Valoare, group=Indicator)) + 
+  geom_line(aes(colour=Indicator), size=1.5) +
+  scale_y_continuous(labels=scales::percent_format(scale=1, accuracy = 1)) + 
+  labs(title = "Profitabilitatea în cursul timpului", 
+       x=NULL, y="Profitabilitatea", caption="Figura II.3")
+```
+
+Observăm o creștere susținută după 2015 - anul revenirii din criză, cu creșterea ambelor marje de profitabilitate, excepție făcând anul 2019 pentru ROA. Dar explicația e simplă: creșterea agresivă a activelor circulante a firmei `FVD GLOBAL HOUSE SA` în anul 2019 mărește numitorul pentru indicatorul ROA în mod disproporționat, scăzând raportul nostru în mod semnificativ. Atât de mare este concentrarea de putere economică a unor firme. Dincolo de acest lucru, procentele sunt bune, probabil duble față de ale firmelor din Vest. Dar sumele absolute sunt teribil de mici și ar trebui investigată cauza lor prin controale țintite de la ANAF cu scopul de a înțelege cât din aceste cifre se datorează evaziunii și cât este realitate. Fără un asemenea lucru rămânem pe tărâmul speculației și nu avem uneltele necesare unei reforme importante care să permită o economie ce plătește salarii mai bune, mai performantă. Urmează să studiem profitabilitatea și pe sectoare de activitate.
+
+```{r, fig.asp=1.6, out.width='100%'}
+x %>% filter(grepl("Agricult|Industri|Comer|Hotel|Construc|Transport|Informa", categ)) %>% 
+  select(year, CA, Profit_net, AI,AC, categ) %>% 
+  group_by(year, categ) %>% 
+  summarise(ROA = 100*sum(Profit_net)/sum(AI + AC), 
+            ROS = 100*sum(Profit_net)/sum(CA)) %>% 
+  gather(3:4, key="Indicator", value="Valoare") %>% 
+  ggplot(aes(x=year, y=Valoare, group=Indicator)) + 
+  geom_line(aes(colour=Indicator), size=1.5) +
+  scale_y_continuous(labels=scales::percent_format(scale=1, accuracy = 1)) + 
+  facet_wrap(~categ, ncol=2, scales='free') +
+  theme(legend.position = "top", strip.text = element_text(size=10)) +
+  labs(title = "Profitabilitatea în diferite sectoare", 
+       x=NULL, y=NULL, caption="Figura II.4")
+
+```
+
+Concluzia o poate trage fiecare inspectând graficul.
+
+A acumulat România capital ? E o întrebare interesantă. Să vedem trendul capitalului agregat la nivel național în timp. Întrucât există firme care denaturează realitatea, vom calcula aceiași indicatori cu și fără a le include.
+
+```{r}
+x %>% select(capitaluri, year) %>% 
+  group_by(year) %>% 
+  summarise(total = sum(capitaluri)) %>% 
+  bind_cols(x %>% filter(!grepl("GLOBAL HOUSE", nume)) %>% 
+            select(capitaluri, year) %>% group_by(year) %>% 
+            summarise(total = sum(capitaluri)) %>% select(-year)) %>% 
+  rename(cu = total...2, fara=total...3) %>% 
+  mutate_at(2:3, ~./1000000000) %>%
+  ggplot(aes(x=year, y=cu)) + geom_line() + 
+  geom_line(aes(x=year, y=fara), colour="red") + 
+  labs(title = "Capitalul românesc cu și fără FVD GLOBAL HOUSE", 
+       x=NULL, y="Miliarde", caption="Figura II.5") +
+  scale_y_comma()
+
+```
+
+Diferența e grăitoare. Fără a lua în calcul aceste firme am rămâne cu falsa impresie că România a acumulat capital extrem de repede. În realitate creșterea este modestă și e și mai modestă decât sugerează graficul dacă ne gândim că mai pot fi firme de mare anvergură care s-au capitalizat excesiv. Cu toate acestea, creșterea nu e de ignorat, dar România are încă mai puțin capital decât un PIB întreg, mai exact vreo 60 % din el, probabil o anomalie specifică Estului dacă îl citim pe Piketty în prima lui carte, unde bogăția națională este de 5-6 ori PIB-ul anual. În aceste condiții mediul privat își permite și profituri mari cu marje mai mici. Să vedem acumularea de capital pe sectoare de activitate. Le vom selecta pe primele zece, fiind și cele mai importante.
+
+```{r}
+x %>% filter(!grepl("GLOBAL HOUSE", nume)) %>% 
+  select(categ, year, capitaluri) %>% 
+  mutate(capitaluri = capitaluri/1000000000) %>%
+  mutate(categ = substr(categ, 1,26)) %>%
+  group_by(year, categ) %>% 
+  summarise(total = sum(capitaluri)) %>% ungroup() %>% 
+  group_by(year) %>% slice_max(total, n=10) %>% ungroup() %>% 
+  ggplot(aes(x=year, y=total, group=categ)) + 
+  geom_line(aes(colour=categ)) +
+  labs(title = "Acumularea de capital pe sectoare", 
+       x=NULL, y="Miliarde lei", caption="Figura II.6") +
+  scale_y_comma()
+
+```
+
+Observăm cele mai mari acumulări de capital în industria prelucrătoare și comerț, cu un ușor declin în producția și furnizarea de energie electrică și o revenire parțială a construcțiilor, care nu au atins încă nivelul din 2012. O întrebare foarte interesantă la care nu putem răspunde, neavând acces la datele de la Registrul Comerțului este distribuția capital străin/românesc. Din păcate nu se poate răspunde la ea folosind acest set de date.
+
+Asumând că singura schimbare căreia se datorează acumularea de capital este profitul reinvestit, putem calcula rata reinvestirii profitului înapoi în economie. 
+
+```{r}
+x %>% filter(!grepl("GLOBAL HOUSE", nume)) %>% 
+  select(capitaluri, Profit_net, year) %>% 
+  group_by(year) %>% 
+  summarise(total = sum(capitaluri), 
+            profit=sum(Profit_net)) %>% ungroup() %>% 
+  mutate(delta = c(0, diff(total))) %>% 
+  mutate(reinvestit = 100*delta/profit) %>% 
+  ggplot(aes(x=year, y=reinvestit)) + 
+  geom_col(fill="steelblue1") + 
+  labs(title = "Procentul profitului reinvestit", 
+       x=NULL, y=NULL, caption="Figura II.7") +
+  scale_y_continuous(labels=scales::percent_format(scale=1))
+```
+
+Mai precis, aceasta este rata maximă posibilă din punct de vedere teoretic - deși nu putem exclude nici efectele de devalorizare. Acest calcul nu trebuie considerat decât ca o aproximație grosolană. Ca să putem afla cu adevărat rata reinvestirii profitului este nevoie de sondaje la nivel de firmă.
+
+
+
+
